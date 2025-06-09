@@ -1,0 +1,17 @@
+<div class="login-container">
+    <div class="logo">
+        <img src="/fetch-logo.png" alt="Fetch Logo" />
+    </div>
+    <form class="login-form" (submit)="loginFormSubmit($event)">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Enter your name" required [(ngModel)]="name" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Enter your email" required [(ngModel)]="email" />
+        </div>
+        <button type="submit">Sign In</button>
+    </form>
+</div>

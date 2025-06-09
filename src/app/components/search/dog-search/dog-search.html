@@ -1,0 +1,82 @@
+<div class="dog-search-container">
+  <header class="search-header">
+    <h1>Dog Finder</h1>
+    <button mat-flat-button color="warn" (click)="logout()">Logout</button>
+  </header>
+
+  <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="search-progress-bar"></mat-progress-bar>
+
+  <div class="filters-container">
+    <mat-form-field appearance="fill" class="filter-field">
+      <mat-label>Filter by Breed</mat-label>
+      <mat-select [(ngModel)]="selectedBreeds" multiple (selectionChange)="onFilterChange()">
+        <mat-option *ngFor="let breed of breeds$ | async" [value]="breed">{{ breed }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="filter-field">
+      <mat-label>Min Age</mat-label>
+      <input matInput type="number" [(ngModel)]="ageMin" (input)="onFilterChange()" placeholder="Any">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="filter-field">
+      <mat-label>Max Age</mat-label>
+      <input matInput type="number" [(ngModel)]="ageMax" (input)="onFilterChange()" placeholder="Any">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="filter-field zip-field">
+      <mat-label>Zip Codes (comma-separated)</mat-label>
+      <input matInput [(ngModel)]="zipCodes" (input)="onFilterChange()" placeholder="e.g., 90210,10001">
+    </mat-form-field>
+
+    <div class="sort-controls">
+      <button mat-button (click)="toggleSortDirection()">
+        Sort by Breed: {{ sortDirection === 'asc' ? 'A-Z' : 'Z-A' }}
+        <mat-icon>{{ sortDirection === 'asc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="dog-list">
+    <mat-card *ngFor="let dog of dogs$ | async" class="dog-card">
+      <img mat-card-image [src]="dog.img" [alt]="dog.name" />
+      <mat-card-content>
+        <h3>{{ dog.name }}</h3>
+        <p><strong>Breed:</strong> {{ dog.breed }}</p>
+        <p><strong>Age:</strong> {{ dog.age }}</p>
+        <p><strong>Zip Code:</strong> {{ dog.zip_code }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-icon-button color="warn" (click)="toggleFavorite(dog)">
+          <mat-icon>{{ favorites.has(dog.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <mat-paginator [length]="totalResults$ | async" [pageSize]="pageSize" [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+  </mat-paginator>
+
+  <div class="match-controls">
+    <button mat-raised-button color="primary" (click)="generateMatch()" [disabled]="(loading$ | async) || favorites.size === 0">
+      Generate Match
+    </button>
+  </div>
+
+  <div *ngIf="matchDog$ | async as matchDog" class="match-result">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Match Found!</mat-card-title>
+        <button mat-icon-button (click)="clearMatch()"><mat-icon>close</mat-icon></button>
+      </mat-card-header>
+      <img mat-card-image [src]="matchDog.img" [alt]="matchDog.name" />
+      <mat-card-content>
+        <h3>{{ matchDog.name }}</h3>
+        <p><strong>Breed:</strong> {{ matchDog.breed }}</p>
+        <p><strong>Age:</strong> {{ matchDog.age }}</p>
+        <p><strong>Zip Code:</strong> {{ matchDog.zip_code }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

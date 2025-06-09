@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://frontend-take-home-service.fetch.com",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+} 
