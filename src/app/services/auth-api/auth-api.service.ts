@@ -22,7 +22,11 @@ export class AuthApiService {
   }
 
   login(name: string, email: string): Observable<any> {
-    return this.http.post(`${this.baseURL}/auth/login`, { name, email }, { observe: 'response', withCredentials: true });
+    return this.http.post(`${this.baseURL}/auth/login`, { name, email }, {
+      observe: 'response',
+      withCredentials: true,
+      responseType: 'text'
+    });
   }
 
   logout(): Observable<any> {
