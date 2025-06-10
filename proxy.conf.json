@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://frontend-take-home-service.fetch.com",
+    "target": "https://fetch-assesment-app.onrender.com",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
