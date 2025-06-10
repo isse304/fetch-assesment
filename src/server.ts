@@ -6,11 +6,33 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// API proxy
+app.use('/api', createProxyMiddleware({
+  target: 'https://frontend-take-home-service.fetch.com',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api': ''
+  },
+  on: {
+    proxyReq: (proxyReq, req, res) => {
+      if (req.headers.cookie) {
+        proxyReq.setHeader('cookie', req.headers.cookie);
+      }
+    },
+    proxyRes: (proxyRes, req, res) => {
+      if (proxyRes.headers['set-cookie']) {
+        res.setHeader('set-cookie', proxyRes.headers['set-cookie']);
+      }
+    }
+  }
+}));
 
 /**
  * Example Express Rest API endpoints can be defined here.
